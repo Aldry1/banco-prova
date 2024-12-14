@@ -1,0 +1,264 @@
+-- Tabela de pessoas
+CREATE TABLE pessoas (
+    id_pessoa SERIAL PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    data_nascimento DATE,
+    cpf VARCHAR(14) UNIQUE
+);
+
+-- Tabela de endereços das pessoas
+CREATE TABLE pessoa_enderecos (
+    id_pessoa_endereco SERIAL PRIMARY KEY,
+    id_pessoa INTEGER REFERENCES pessoas(id_pessoa),
+    logradouro VARCHAR(100),
+    numero VARCHAR(20),
+    complemento VARCHAR(100),
+    bairro VARCHAR(100),
+    cidade VARCHAR(100),
+    estado CHAR(2),
+    cep VARCHAR(9)
+);
+
+-- Tabela de emails das pessoas
+CREATE TABLE pessoa_emails (
+    id_pessoa_email SERIAL PRIMARY KEY,
+    id_pessoa INTEGER REFERENCES pessoas(id_pessoa),
+    email VARCHAR(100)
+);
+
+-- Tabela de telefones das pessoas
+CREATE TABLE pessoa_telefones (
+    id_pessoa_telefone SERIAL PRIMARY KEY,
+    id_pessoa INTEGER REFERENCES pessoas(id_pessoa),
+    telefone VARCHAR(20),
+    tipo VARCHAR(10)
+);
+
+-- Tabela de funcionários
+CREATE TABLE funcionarios (
+    id_funcionario SERIAL PRIMARY KEY,
+    id_pessoa INTEGER REFERENCES pessoas(id_pessoa),
+    data_admissao DATE,
+    data_demissao DATE
+);
+
+-- Tabela de cargos
+CREATE TABLE cargos (
+    id_cargo SERIAL PRIMARY KEY,
+    descricao VARCHAR(100),
+    salario_inicial NUMERIC(10,2)
+);
+
+-- Tabela de departamentos
+CREATE TABLE departamentos (
+    id_departamento SERIAL PRIMARY KEY,
+    nome VARCHAR(100)
+);
+
+-- Tabela de bancos
+CREATE TABLE bancos (
+    id_banco SERIAL PRIMARY KEY,
+    nome VARCHAR(100),
+    agencia VARCHAR(20),
+    conta VARCHAR(20)
+);
+
+-- Tabela de transações
+CREATE TABLE transacoes (
+    id_transacao SERIAL PRIMARY KEY,
+    id_funcionario INTEGER REFERENCES funcionarios(id_funcionario),
+    id_banco INTEGER REFERENCES bancos(id_banco),
+    valor NUMERIC(10,2),
+    data_transacao DATE,
+    descricao TEXT,
+    tipo VARCHAR(10),
+    aprovado BOOLEAN
+);
+
+-- Tabela de logs
+CREATE TABLE logs (
+    id_log SERIAL PRIMARY KEY,
+    tabela VARCHAR(100),
+    operacao VARCHAR(10),
+    usuario VARCHAR(100),
+    data_hora TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    detalhes TEXT
+);
+
+-- Inserindo dados na tabela pessoas
+INSERT INTO pessoas (nome, data_nascimento, cpf) VALUES
+('João Silva', '1985-02-20', '123.456.789-01'),
+('Maria Oliveira', '2022-07-15', '987.654.321-09'),
+('Carlos Pereira', '1975-10-05', '111.222.333-44'),
+('Ana Costa', '2000-03-12', '555.666.777-88'),
+('Camila Santos', '2092-12-25', '666.777.888-00');
+('Pedro Almeida', '1988-06-01', '333.444.555-66'),
+('Juliana Rocha', '1995-09-21', '777.888.999-11'),
+('Lucas Mendes', '1982-11-30', '000.111.222-33'),
+('Fernanda Lima', '1903-05-14', '444.555.666-77'),
+('Gustavo Souza', '1987-08-10', '888.999.000-44'),
+('Camila Santos', '2092-12-25', '666.777.888-00');
+('Fernando Limo', '1903-05-14', '444.555.666-77'),
+
+-- Inserindo dados na tabela pessoa_enderecos
+INSERT INTO pessoa_enderecos (id_pessoa, logradouro, numero, complemento, bairro, cidade, estado, cep) VALUES
+(1, 'Rua das Flores', '123', 'Apto 1', 'Centro', 'São Paulo', 'SP', '01001-000'),
+(2, 'Avenida Brasil', '456', NULL, 'Jardim América', 'Rio de Janeiro', 'RJ', '20001-000'),
+(3, 'Rua Amazonas', '789', 'Casa', 'Boa Vista', 'Belo Horizonte', 'MG', '30001-000'),
+(4, 'Rua Ceará', '101', NULL, 'Centro', 'Curitiba', 'PR', '80001-000'),
+(5, 'Avenida Goiás', '202', 'Bloco B', 'Setor Oeste', 'Goiânia', 'GO', '74001-000'),
+(6, 'Rua Pará', '303', NULL, 'Centro', 'Manaus', 'ZZ', '69001-000'),
+(7, 'Avenida Maranhão', '404', 'Loja 10', 'Centro', 'Fortaleza', 'CE', '60001-000'),
+(8, 'Rua Pernambuco', '505', 'Sala 2', 'Centro', 'Recife', 'PE', '50001-000'),
+(9, 'Avenida Bahia', '606', 'Cobertura', 'Centro', 'Miami', 'BA', '40001-000'),
+(10, 'Rua Rio Grande', '707', NULL, 'Centro', 'Porto Alegre', 'RS', '90001-000');
+
+-- Inserindo dados na tabela pessoa_emails
+INSERT INTO pessoa_emails (id_pessoa, email) VALUES
+(1, 'joao.silva@example.com'),
+(2, 'maria.oliveira@example.com'),
+(3, 'carlos.pereira@example.com'),
+(4, '___@example.com'),
+(5, 'pedro.almeida@example.com'),
+(6, 'juliana.rocha@example.com'),
+(7, 'lucas.mendes@example.com'),
+(8, 'fernanda.lima@example.com'),
+(9, 'gustavo.souza@example.com'),
+(10, 'fernanda.lima@example.com');
+
+-- Inserindo dados na tabela pessoa_telefones
+INSERT INTO pessoa_telefones (id_pessoa, telefone, tipo) VALUES
+(1, '(11) 98765-4321', 'Celular'),
+(2, '(21) 98765-4322', 'Celular'),
+(3, '(31) -4323', 'Celular'),
+(4, '(41) 98765-4324', 'Celular'),
+(5, '(62) 98765-4325', 'Celular'),
+(6, '(92) 98765-4326', 'Celular'),
+(7, '(85) 98765-43', 'Celular'),
+(8, '(81) 99758-4328', 'Celular'),
+(9, '(71) 98765-4329', 'Celular'),
+(10, '(51) 98765-4330', 'Celular');
+(11, '(51) 98765-4330', 'Celular');
+
+-- Inserindo dados na tabela funcionarios
+INSERT INTO funcionarios (id_pessoa, data_admissao, data_demissao) VALUES
+(1, '2020-01-10', NULL),
+(2, '2019-06-15', NULL),
+(3, '2018-03-20', '2023-10-01'),
+(4, '2021-05-05', NULL),
+(5, '2020-11-25', '2023-01-15'),
+(6, '2022-08-10', NULL),
+(7, '2017-02-18', NULL),
+(8, '2019-09-07', NULL),
+(9, '2016-12-12', '2022-12-31'),
+(10, '2023-04-01', NULL);
+
+-- Inserindo dados na tabela cargos
+INSERT INTO cargos (descricao, salario_inicial) VALUES
+('Analista de Sistemas', 5000.00),
+('Gerente de Projetos', 10000.00),
+('Desenvolvedor Backend', 6000.00),
+('Desenvolvedor Frontend', 5500.00),
+('Engenheiro de Dados', 8000.00),
+('Administrador de Redes', 4500.00),
+('Designer UX/UI', 4800.00),
+('Consultor de TI', 7000.00),
+('Scrum Master', 7500.00),
+('Product Owner', 9000.00);
+
+-- Inserindo dados na tabela departamentos
+INSERT INTO departamentos (nome) VALUES
+('TI'),
+('RH'),
+('Financeiro'),
+('Marketing'),
+('Vendas'),
+('Logística'),
+('Produção'),
+('Suporte Técnico'),
+('Administrativo'),
+('Pesquisa e Desenvolvimento');
+
+-- Inserindo dados na tabela bancos
+INSERT INTO bancos (nome, agencia, conta) VALUES
+('Banco do Brazil', '1234', '56789-0'),
+('Caixa Econômica', '5678', '12345-6'),
+('Bradesco', '8765', '43210-9'),
+('Itaú', '4321', '09876-5'),
+('Santander', '1122', '33445-6'),
+('Sicredi', '3344', '55667-8'),
+('Inter', '5566', '77889-0'),
+('Nubamk', '7788', '99001-2'),
+('BTG Pactual', '9900', '12321-3'),
+('Original', '1212', '21212-1');
+('Stramberry', '1212', '21212-1');
+-- Inserindo dados na tabela transacoes
+INSERT INTO transacoes (id_funcionario, id_banco, valor, data_transacao, descricao, tipo, aprovado) VALUES
+(1, 1, 1200.00, '2024-01-10', 'Pagamento de salário', 'Crédito', TRUE),
+(2, 2, 1500.00, '2024-01-12', 'Reembolso de despesas', 'Crédito', TRUE),
+(3, 3, 800.00, '2024-01-15', 'Adiantamento', 'Crédito', TRUE),
+(4, 4, 500.00, '2024-01-20', 'Compra de materiais', 'Débito', FALSE),
+(5, 5, 1000.00, '2024-01-25', 'Bônus de produtividade', 'Crédito', TRUE),
+(6, 6, 200.00, '2024-02-01', 'Pagamento de fornecedores', 'Débito', TRUE),
+(7, 7, 300.00, '2024-02-05', 'Compra de insumos', 'Débito', FALSE),
+(8, 8, 750.00, '2024-02-10', 'Pagamento de consultoria', 'Débito', TRUE),
+(9, 9, 400.00, '2024-02-15', 'Adiantamento', 'Crédito', TRUE),
+(10, 10, 600.00, '2024-02-20', 'Pagamento de software', 'Débito', TRUE);
+(11, 11, 400.00, '2024-02-15', 'Adiantamento', 'Crédito', TRUE),
+(12, 11, 600.00, '2024-02-20', 'Pagamento de software', 'Débito', TRUE);
+
+-- Inserindo dados na tabela logs
+INSERT INTO logs (tabela, operacao, usuario, detalhes) VALUES
+('pessoas', 'INSERT', 'admin', 'Inserção de registro na tabela pessoas'),
+('pessoa_enderecos', 'INSERT', 'admin', 'Inserção de registro na tabela pessoa_enderecos'),
+('pessoa_emails', 'INSERT', 'admin', 'Inserção de registro na tabela pessoa_emails'),
+('pessoa_telefones', 'INSERT', 'admin', 'Inserção de registro na tabela pessoa_telefones'),
+('funcionarios', 'INSERT', 'admin', 'Inserção de registro na tabela funcionarios'),
+('cargos', 'INSERT', 'admin', 'Inserção de registro na tabela cargos'),
+('departamentos', 'INSERT', 'admin', 'Inserção de registro na tabela departamentos'),
+('bancos', 'INSERT', 'admin', 'Inserção de registro na tabela bancos'),
+('transacoes', 'INSERT', 'admin', 'Inserção de registro na tabela transacoes'),
+('logs', 'INSERT', 'admin', 'Inserção de registro na tabela logs');
+
+INSERT INTO logs (tabela, operacao, usuario, detalhes)
+VALUES
+('Funcionários', 'INSERT', 'Admin', 'ID 1: Analista de Sistemas, Admissão: 2020-01-10, Demissão: Não aplicável'),
+('Funcionários', 'INSERT', 'Admin', 'ID 2: Gerente de Projetos, Admissão: 2019-06-15, Demissão: Não aplicável'),
+('Funcionários', 'INSERT', 'Admin', 'ID 3: Desenvolvedor Backend, Admissão: 2023-03-20, Demissão: 2018-10-01'),
+('Funcionários', 'UPDATE', 'Admin', 'ID 4: Desenvolvedor Frontend, Admissão: 2021-05-05, Demissão: Não aplicável'),
+('Funcionários', 'INSERT', 'Admin', 'ID 5: Engenheiro de Dados, Admissão: 2020-11-25, Demissão: 2023-01-15'),
+('Funcionários', 'INSERT', 'Admin', 'ID 6: Administrador de Redes, Admissão: 2022-08-10, Demissão: Não aplicável'),
+('Funcionários', 'INSERT', 'Admin', 'ID 7: Designer UX/UI, Admissão: 2017-02-18, Demissão: Não aplicável'),
+('Funcionários', 'INSERT', 'Admin', 'ID 8: Consultor de TI, Admissão: 2019-09-07, Demissão: 2024-12-13'),
+('Funcionários', 'UPDATE', 'Admin', 'ID 9: Scrum Master, Admissão: 2016-12-12, Demissão: 2022-12-31'),
+('Funcionários', 'INSERT', 'Admin', 'ID 10: Desenvolvedor Backend, Admissão: 2023-04-01, Demissão: Não aplicável');
+('Funcionários', 'UPDATE', 'Admin', 'ID 5: Engenheiro de Dados, Admissão: 2020-11-25, Demissão: 2023-01-15'),
+
+
+-- Tabela de movimentações
+
+CREATE TABLE movimentacoes(
+id_movimentacoes SERIAL PRIMARY KEY,
+id_transacao INT NOT NULL,
+id_banco_origem INT NOT NULL,
+id_banco_destino INT NOT NULL,
+valor numeric(10, 2) NOT NULL,
+data_movimentacao DATE NOT NULL,
+tipo VARCHAR(20) NOT NULL
+
+
+)
+
+Inserindo três registros na tabela movimentacoes
+
+ INSERT INTO movimentacoes (tabela, operacao, usuario, detalhes) VALUES
+(1, 1, 2, 500.00, '2024-01-20', 'Transferência'), 
+(2, 3, 4, 1200.00, '2024-02-15', 'Depósito'), 
+(3, 5, 6, 800.00, '2024-03-10', 'Pagamento');
+
+--atualizar email de um funcionario
+SELECT * FROM
+UPDATE pessoa_emails
+SET colu
+
+
